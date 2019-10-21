@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Ping Pong - What Mattrs'),
+      home: MyHomePage(
+        title: 'Ping Pong - What Mattrs',
+      ),
     );
   }
 }
@@ -48,6 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String dropdownValue = "Chase";
   // String textValue = "";
   List<String> players = ['Chase', 'Josh'];
+
+  final myController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -81,17 +85,28 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'Already have an account?\nSelect from the Dropdown to Continue',
+            Padding(
+              padding: EdgeInsets.all(10),
+            ),
+            Text('Already have an account?',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )),
+            Padding(
+              padding: EdgeInsets.all(10),
             ),
             DropdownButton<String>(
               value: dropdownValue,
               icon: Icon(Icons.arrow_downward),
-              iconSize: 24,
+              iconSize: 32,
               elevation: 16,
-              style: TextStyle(color: Colors.blueAccent),
+              style: TextStyle(
+                color: Colors.blueAccent,
+                fontSize: 20,
+              ),
               underline: Container(
                 height: 2,
                 color: Colors.blueGrey,
@@ -108,21 +123,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }).toList(),
             ),
-            Text('Or create a new Player!'),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Name',
+            Text(
+              'Or create a new Player!',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Container(
+              width: 215.0,
+              padding: EdgeInsets.all(10),
+              child: TextField(
+                controller: myController,
+                maxLength: 25,
+                style: TextStyle(color: Colors.blueAccent),
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Name',
+                ),
+                onSubmitted: (text) {
+                  setState(() {
+                    players.add('$text');
+                    dropdownValue = text;
+                  });
+                },
               ),
-              onSubmitted: (text) {
-                debugPrint('value: $text');
-                // players.add('$text');
-
-                setState(() {
-                  players.add('$text');
-                  debugPrint('$players');
-                });
-              },
+            ),
+            RaisedButton(
+              textColor: Colors.white,
+              onPressed: () => setState(() {
+                String text = myController.text;
+                players.add('$text');
+                // debugPrint(text);
+                dropdownValue = myController.text;
+              }),
+              color: Colors.blue,
+              child: Text('Let\'s GO!', style: TextStyle(fontSize: 20)),
             ),
           ],
         ),
